@@ -3,11 +3,11 @@ package com.cmpn.tripsdemo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
-public class TripsdemoApplication {
+@SpringBootApplication(scanBasePackages = "com.cmpn.tripsdemo")
+public class TripsDemoApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(TripsdemoApplication.class, args);
+        SpringApplication.run(TripsDemoApplication.class, args);
     }
 
 }
