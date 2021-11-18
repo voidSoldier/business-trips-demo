@@ -1,16 +1,15 @@
 package com.cmpn.tripsdemo.domain;
 
-import com.cmpn.tripsdemo.repos.MongoRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.cmpn.tripsdemo.repos.TripMongoRepo;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Consumer {
 
-    private MongoRepo tripRepo;
+    private TripMongoRepo tripRepo;
     private FeignClient client;
 
-    public Consumer(MongoRepo tripRepo, FeignClient client) {
+    public Consumer(TripMongoRepo tripRepo, FeignClient client) {
         this.tripRepo = tripRepo;
         this.client = client;
     }
