@@ -1,18 +1,22 @@
 package com.cmpn.tripsdemo.domain;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.lang.NonNull;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Map;
 
 @Document
 public class Trip {
-    @MongoId
+    @Id
     private String id;
 
     @Max(255)
@@ -27,9 +31,11 @@ public class Trip {
 
     private Map<String, String> coordinates;
 
-    @NotNull
-    @NotEmpty
+//    @NotNull
+//    @NotEmpty
     private Map<String, String> segments;
+
+    public Trip() {}
 
     public Trip(String destTitle, LocalDateTime departure, LocalDateTime arrival, @NonNull String userID) {
         this.destTitle = destTitle;
@@ -37,6 +43,17 @@ public class Trip {
         this.arrival = arrival;
         this.userID = userID;
     }
+
+  public Trip(String id, String destTitle, LocalDateTime departure, LocalDateTime arrival,
+              String userID, Map<String, String> coordinates, Map<String, String> segments) {
+    this.id = id;
+    this.destTitle = destTitle;
+    this.departure = departure;
+    this.arrival = arrival;
+    this.userID = userID;
+    this.coordinates = coordinates;
+    this.segments = segments;
+  }
 
     public String getId() {
         return id;

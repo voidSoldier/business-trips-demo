@@ -1,6 +1,10 @@
 package com.cmpn.tripsdemo.domain;
 
 import com.cmpn.tripsdemo.repos.TripMongoRepo;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,12 +18,22 @@ public class Consumer {
         this.client = client;
     }
 
-    public void saveOrUpdate(Trip trip) {
-        tripRepo.save(enrich(trip));
+    // default
+    public void getMessage(String msg) {
+        System.out.println("received in 'getMessage': " + msg);
     }
 
-    public void delete(Trip trip) {
-        tripRepo.delete(enrich(trip));
+    public void saveOrUpdate(String tripStr) throws JsonProcessingException {
+      ObjectMapper m = new ObjectMapper();
+      Trip trip = m.readValue(tripStr, Trip.class);
+      System.out.println("received in 'saveOrUpdate': " + trip);
+      tripRepo.save(enrich(trip));
+
+    }
+
+    public void delete(String id) {
+      System.out.println("received in 'delete': " + id);
+        tripRepo.deleteById(id);
     }
 
     private Trip enrich(Trip trip) {

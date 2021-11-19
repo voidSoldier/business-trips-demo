@@ -1,6 +1,7 @@
 package com.cmpn.tripsdemo;
 
 import com.cmpn.tripsdemo.auth.TokenService;
+import com.cmpn.tripsdemo.repos.TripMongoRepo;
 import com.cmpn.tripsdemo.repos.UserMongoRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -33,5 +34,8 @@ public class TripsDemoApplication implements CommandLineRunner {
         UserMongoRepo userRepo = (UserMongoRepo) appContext.getBean("userMongoRepo");
         userRepo.deleteAll();
         userRepo.saveAll(Arrays.asList(admin, user));
+
+//      TripMongoRepo tripRepo = (TripMongoRepo) appContext.getBean("tripMongoRepo");
+//      tripRepo.deleteAll();
     }
 }
