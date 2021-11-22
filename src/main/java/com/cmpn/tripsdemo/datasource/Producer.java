@@ -1,5 +1,9 @@
 package com.cmpn.tripsdemo.datasource;
 
+import com.cmpn.tripsdemo.config.RabbitConfig;
+import com.cmpn.tripsdemo.domain.Trip;
+import com.cmpn.tripsdemo.domain.TripMsgWrapper;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
@@ -12,8 +16,9 @@ public class Producer {
     this.rabbitTemplate = rabbitTemplate;
   }
 
-  public void sendMessage(String exchange, String key, String msg) {
-    rabbitTemplate.convertAndSend(exchange, key, msg);
+  public void sendWrappedMsg(String type, Trip trip) {
+    TripMsgWrapper wrapper = new TripMsgWrapper(trip, type);
+    rabbitTemplate.convertAndSend(RabbitConfig.FANOUT_EXCHANGE_NAME, Strings.EMPTY, wrapper);
+    System.out.println("________________ message sent");
   }
-
 }

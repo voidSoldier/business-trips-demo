@@ -1,8 +1,7 @@
 package com.cmpn.tripsdemo.datasource;
 
-import com.cmpn.tripsdemo.config.RabbitConfig;
 import com.cmpn.tripsdemo.domain.Trip;
-import com.cmpn.tripsdemo.repos.TripMongoRepo;
+import com.cmpn.tripsdemo.exception.TripNotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.Page;
@@ -23,43 +22,35 @@ public class TripController {
 
   private final Producer producer;
 
-  private final TripMongoRepo tripRepo;
+  private final TripService tripService;
 
-  private final ObjectMapper mapper;
-
-  public TripController(Producer producer, TripMongoRepo tripRepo, ObjectMapper mapper) {
+  public TripController(Producer producer, TripService tripService) {
     this.producer = producer;
-    this.tripRepo = tripRepo;
-    this.mapper = mapper;
+    this.tripService = tripService;
   }
 
   @GetMapping
   public Page<Trip> getAll(Pageable pageable) {
-    return tripRepo.findAll(pageable);
+    return tripService.findAll(pageable);
   }
 
   @GetMapping(path = "/{id}")
-  public Trip getTripById(@PathVariable String id) {
-    return tripRepo.findById(id).orElseThrow(() ->
-      new RuntimeException("Entity with id [" + id + "] doesn't exist."));
+  public Trip getTripById(@PathVariable String id) throws TripNotFoundException {
+    return tripService.findById(id);
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-  public void createTrip(@RequestBody Trip newTrip) throws JsonProcessingException {
-    producer.sendMessage(RabbitConfig.DIR_EXCHANGE_NAME, "trip.save", tripToJson(newTrip));
+  public void createTrip(@RequestBody Trip trip) {
+    producer.sendWrappedMsg("save-upd", trip);
   }
 
   @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-  public void updateTrip(@RequestBody Trip trip) throws JsonProcessingException {
-    producer.sendMessage(RabbitConfig.DIR_EXCHANGE_NAME, "trip.update", tripToJson(trip));
+  public void updateTrip(@RequestBody Trip trip) {
+    producer.sendWrappedMsg("save-upd", trip);
   }
 
-  @DeleteMapping(path = "/{id}")
-  public void deleteTrip(@PathVariable String id) {
-    producer.sendMessage(RabbitConfig.DIR_EXCHANGE_NAME, "trip.delete", id);
-  }
-
-  private String tripToJson(Trip trip) throws JsonProcessingException {
-    return mapper.writeValueAsString(trip);
+  @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  public void deleteTrip(@RequestBody Trip trip) {
+    producer.sendWrappedMsg("delete", trip);
   }
 }
