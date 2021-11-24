@@ -17,11 +17,9 @@ import java.io.IOException;
 public class OncePerRequestAuthFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
-    private final UserDetailsService userDetailsService;
 
-    public OncePerRequestAuthFilter(TokenService tokenService, UserDetailsService userDetailsService) {
+    public OncePerRequestAuthFilter(TokenService tokenService) {
         this.tokenService = tokenService;
-        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -29,8 +27,6 @@ public class OncePerRequestAuthFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (!isInvalid(authHeader) && tokenService.verifyToken(authHeader)) {
-            String username = request.getParameter("username");
-        //    authenticate(username);
             filterChain.doFilter(request, response);
         }
         else
@@ -41,12 +37,5 @@ public class OncePerRequestAuthFilter extends OncePerRequestFilter {
         return authHeader == null ||
                 authHeader.isBlank() ||
                 !authHeader.startsWith("Bearer ");
-    }
-
-    private void authenticate(String username) {
-        User principal = (User) userDetailsService.loadUserByUsername(username);
-        UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(token);
     }
 }

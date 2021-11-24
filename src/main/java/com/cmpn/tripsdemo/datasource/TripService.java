@@ -33,7 +33,7 @@ public class TripService {
   }
 
   public void saveOrUpdateTrip(Trip trip) {
-    producer.sendWrappedMsg("save-upd000", trip);
+    producer.sendWrappedMsg("save-upd", trip);
     log.info("Saving trip [{}]", trip);
   }
 

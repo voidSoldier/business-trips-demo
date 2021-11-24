@@ -40,7 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatcher("/api/**").authorizeRequests()
 //                .anyRequest().authenticated()
 //                .and()
-                .addFilterBefore(new OncePerRequestAuthFilter(tokenService, userDetailsService()),
+                .addFilterBefore(new OncePerRequestAuthFilter(tokenService),
                         UsernamePasswordAuthenticationFilter.class);
     }
 }

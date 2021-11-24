@@ -21,7 +21,7 @@ public class Consumer {
   }
 
   @RabbitListener(queues = {"trips-queue"})
-  public void receiveMessage(TripMsgWrapper msg) throws UnsupportedOperationException {
+  public void receiveMessage(TripMsgWrapper msg) {
     log.info("Message received: {}", msg);
     String type = msg.getMsgType();
     Trip trip = msg.getTrip();
