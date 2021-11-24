@@ -1,6 +1,8 @@
 package com.cmpn.tripsdemo.domain;
 
 import com.cmpn.tripsdemo.repos.TripMongoRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
@@ -11,14 +13,16 @@ public class Consumer {
 
   private FeignClient client;
 
+  private static final Logger log = LoggerFactory.getLogger(Consumer.class);
+
   public Consumer(TripMongoRepo tripRepo, FeignClient client) {
     this.tripRepo = tripRepo;
     this.client = client;
   }
 
   @RabbitListener(queues = {"trips-queue"})
-  public void receiveMessage(TripMsgWrapper msg) {
-    System.out.println("received in 'getMessage': " + msg);
+  public void receiveMessage(TripMsgWrapper msg) throws UnsupportedOperationException {
+    log.info("Message received: {}", msg);
     String type = msg.getMsgType();
     Trip trip = msg.getTrip();
 
@@ -30,16 +34,15 @@ public class Consumer {
         delete(trip);
         break;
       default:
+        log.error("Method with [{}] type doesn't exist", type);
     }
   }
 
   private void saveOrUpdate(Trip trip) {
-    System.out.println("received in 'saveOrUpdate': " + trip);
     tripRepo.save(enrich(trip));
   }
 
   private void delete(Trip trip) {
-    System.out.println("received in 'delete': " + trip);
     tripRepo.delete(trip);
   }
 

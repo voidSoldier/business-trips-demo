@@ -19,4 +19,9 @@ public class TripMsgWrapper implements Serializable {
   public String getMsgType() {
     return msgType;
   }
+
+  @Override
+  public String toString() {
+    return String.format("Msg type: %s, trip: %s", msgType, trip);
+  }
 }

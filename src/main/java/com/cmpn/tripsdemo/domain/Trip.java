@@ -107,4 +107,13 @@ public class Trip implements Serializable {
     public void setSegments(Map<String, String> segments) {
         this.segments = segments;
     }
+
+  @Override
+  public String toString() {
+    return "Trip{" +
+      "id='" + id + '\'' +
+      ", destTitle='" + destTitle + '\'' +
+      ", userID='" + userID + '\'' +
+      '}';
+  }
 }
