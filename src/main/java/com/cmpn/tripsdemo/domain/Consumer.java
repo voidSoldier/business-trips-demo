@@ -33,7 +33,7 @@ public class Consumer {
       case "delete":
         delete(trip);
         break;
-      default:
+        default: // exception to be added
         log.error("Method with [{}] type doesn't exist", type);
     }
   }

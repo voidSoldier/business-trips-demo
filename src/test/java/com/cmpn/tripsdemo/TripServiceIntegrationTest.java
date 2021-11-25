@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class TripServiceUnitTest {
+public class TripServiceIntegrationTest {
 
   @Mock
   private TripMongoRepo repo;

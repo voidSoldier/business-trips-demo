@@ -13,8 +13,8 @@ public class TripExceptionHandler {
   private static final Logger log = LoggerFactory.getLogger(TripExceptionHandler.class);
 
   @ExceptionHandler(TripNotFoundException.class)
-  ResponseEntity<String> handleTripNotFoundByProvidedIdException(TripNotFoundException exception) {
+  ResponseEntity<ErrorResponse> handleTripNotFoundByProvidedIdException(TripNotFoundException exception) {
     log.error(exception.getMessage());
-    return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    return new ResponseEntity<>(new ErrorResponse(HttpStatus.NOT_FOUND.toString(), exception.getMessage()), HttpStatus.NOT_FOUND);
   }
 }

@@ -29,7 +29,7 @@ public class TripService {
 
   public Trip findById(String id) throws TripNotFoundException {
     log.info("Getting trip with id[{}]", id);
-    return tripRepo.findById(id).orElseThrow(() -> new TripNotFoundException("Entity with id [" + id + "] doesn't exist."));
+    return tripRepo.findById(id).orElseThrow(() -> new TripNotFoundException("Trip with id [" + id + "] doesn't exist."));
   }
 
   public void saveOrUpdateTrip(Trip trip) {
