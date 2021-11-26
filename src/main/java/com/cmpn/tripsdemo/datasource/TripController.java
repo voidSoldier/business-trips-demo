@@ -42,6 +42,12 @@ public class TripController {
     tripService.saveOrUpdateTrip(trip);
   }
 
+  @PostMapping(path = "/coords", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseStatus(HttpStatus.CREATED)
+  public void createTripWithCoords(@RequestBody Trip trip) {
+    tripService.saveOrUpdateTrip(trip);
+  }
+
   @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void updateTrip(@RequestBody Trip trip) {

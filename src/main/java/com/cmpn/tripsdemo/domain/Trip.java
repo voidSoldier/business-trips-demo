@@ -12,107 +12,98 @@ import java.util.Map;
 
 @Document
 public class Trip implements Serializable {
-    @Id
-    private String id;
 
-    @Max(255)
-    private String destTitle;
+  @Id
+  private String id;
 
-    private LocalDateTime departure;
+  @Max(255) // TODO: rename to 'tripTitle'
+  private String title;
 
-    private LocalDateTime arrival;
+  private LocalDateTime departure;
 
-    @NotNull
-    private String userID;
+  private LocalDateTime arrival;
 
-    private Map<String, String> coordinates;
+  @NotNull
+  private String userID;
 
-//    @NotNull
-//    @NotEmpty
-    private Map<String, String> segments;
+  private Map<String, String> segments;
 
-    public Trip() {}
+  private Location location;
 
-    public Trip(String destTitle, LocalDateTime departure, LocalDateTime arrival, @NonNull String userID) {
-        this.destTitle = destTitle;
-        this.departure = departure;
-        this.arrival = arrival;
-        this.userID = userID;
-    }
+  public Trip() {
+  }
 
-  public Trip(String id, String destTitle, LocalDateTime departure, LocalDateTime arrival,
-              String userID, Map<String, String> coordinates, Map<String, String> segments) {
-    this.id = id;
-    this.destTitle = destTitle;
+  public Trip(String title, LocalDateTime departure, LocalDateTime arrival,
+              @NonNull String userID, Location location) {
+    this.title = title;
     this.departure = departure;
     this.arrival = arrival;
     this.userID = userID;
-    this.coordinates = coordinates;
+    this.location = location;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public LocalDateTime getDeparture() {
+    return departure;
+  }
+
+  public void setDeparture(LocalDateTime departure) {
+    this.departure = departure;
+  }
+
+  public LocalDateTime getArrival() {
+    return arrival;
+  }
+
+  public void setArrival(LocalDateTime arrival) {
+    this.arrival = arrival;
+  }
+
+  @NonNull
+  public String getUserID() {
+    return userID;
+  }
+
+  public void setUserID(@NonNull String userID) {
+    this.userID = userID;
+  }
+
+  public Map<String, String> getSegments() {
+    return segments;
+  }
+
+  public void setSegments(Map<String, String> segments) {
     this.segments = segments;
   }
 
-    public String getId() {
-        return id;
-    }
+  public Location getLocation() {
+    return location;
+  }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getDestTitle() {
-        return destTitle;
-    }
-
-    public void setDestTitle(String destTitle) {
-        this.destTitle = destTitle;
-    }
-
-    public LocalDateTime getDeparture() {
-        return departure;
-    }
-
-    public void setDeparture(LocalDateTime departure) {
-        this.departure = departure;
-    }
-
-    public LocalDateTime getArrival() {
-        return arrival;
-    }
-
-    public void setArrival(LocalDateTime arrival) {
-        this.arrival = arrival;
-    }
-
-    @NonNull
-    public String getUserID() {
-        return userID;
-    }
-
-    public void setUserID(@NonNull String userID) {
-        this.userID = userID;
-    }
-
-    public Map<String, String> getCoordinates() {
-        return coordinates;
-    }
-
-    public void setCoordinates(Map<String, String> coordinates) {
-        this.coordinates = coordinates;
-    }
-
-    public Map<String, String> getSegments() {
-        return segments;
-    }
-
-    public void setSegments(Map<String, String> segments) {
-        this.segments = segments;
-    }
+  public void setLocation(Location location) {
+    this.location = location;
+  }
 
   @Override
   public String toString() {
     return "Trip{" +
       "id='" + id + '\'' +
-      ", destTitle='" + destTitle + '\'' +
+      ", title='" + title + '\'' +
       ", userID='" + userID + '\'' +
       '}';
   }

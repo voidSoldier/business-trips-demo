@@ -25,27 +25,33 @@ import java.util.Map;
 public class TripRestTemplateIntegrationTest {
 
   TestRestTemplate template = new TestRestTemplate();
+
   @Autowired
   TripMongoRepo repo;
 
-  protected static final String TOKEN = "auth-token";
-  protected static final String BEARER = "Bearer ";
-  protected static String TRIP_ID = "";
-  protected static Trip trip;
+  private static final String TOKEN = "auth-token";
+
+  private static final String BEARER = "Bearer ";
+
+  private static String TRIP_ID = "";
+
+  private static final String TEST_TITLE = "TEST";
+
+  private Trip trip;
 
   private static final String URL = "http://localhost:8080/api/trip";
 
   @BeforeEach
   void setUp() {
     trip = new Trip();
-    trip.setDestTitle("TEST");
+    trip.setTitle(TEST_TITLE);
     Trip saved = repo.save(trip);
     TRIP_ID = saved.getId();
   }
 
   @AfterEach
   void cleaning() {
-    repo.deleteAllByDestTitle("TEST");
+    repo.deleteAllByTitle(TEST_TITLE);
   }
 
   @Test
@@ -53,7 +59,7 @@ public class TripRestTemplateIntegrationTest {
     ResponseEntity<Object> response =
       template.exchange(uri(), HttpMethod.GET, new HttpEntity<>(authHeader()), Object.class);
 //      template.exchange(uri(), HttpMethod.GET, new HttpEntity<>(authHeader()), new ParameterizedTypeReference<>() {});
-    Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+    Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
     Assertions.assertTrue(response.hasBody());
   }
 
@@ -63,7 +69,7 @@ public class TripRestTemplateIntegrationTest {
     params.put("id", TRIP_ID);
     ResponseEntity<Trip> response =
       template.exchange(uri() + "/{id}", HttpMethod.GET, new HttpEntity<>(authHeader()), Trip.class, params);
-    Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+    Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
     Assertions.assertTrue(response.hasBody());
     Assertions.assertNotNull(response.getBody().getId());
   }
@@ -74,27 +80,27 @@ public class TripRestTemplateIntegrationTest {
     params.put("id", "fake_id");
     ResponseEntity<ErrorResponse> response =
       template.exchange(uri() + "/{id}", HttpMethod.GET, new HttpEntity<>(authHeader()), ErrorResponse.class, params);
-    Assertions.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+    Assertions.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     Assertions.assertTrue(response.hasBody());
   }
 
   @Test
   void shouldCreateTrip() throws URISyntaxException {
     ResponseEntity<Trip> response = template.exchange(uri(), HttpMethod.POST, new HttpEntity<>(trip, authHeader()), Trip.class);
-    Assertions.assertEquals(response.getStatusCode(), HttpStatus.CREATED);
+    Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
   }
 
   @Test
   void shouldUpdateTrip() throws URISyntaxException {
     ResponseEntity<Void> response = template.exchange(uri(), HttpMethod.PUT, new HttpEntity<>(trip, authHeader()), Void.class);
-    Assertions.assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);
+    Assertions.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     Assertions.assertFalse(response.hasBody());
   }
 
   @Test
   void shouldDeleteTripById() throws URISyntaxException {
     ResponseEntity<Void> response = template.exchange(uri(), HttpMethod.DELETE, new HttpEntity<>(trip, authHeader()), Void.class);
-    Assertions.assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);
+    Assertions.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     Assertions.assertFalse(response.hasBody());
   }
 

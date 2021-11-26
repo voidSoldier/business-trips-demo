@@ -22,8 +22,8 @@ public class TripMongoRepoIntegrationTest {
 
   @BeforeEach
   void setUp() {
-    Trip trip1 = new Trip("trip 1", null, null, "user 1");
-    Trip trip2 = new Trip("trip 2", null, null, "user 2");
+    Trip trip1 = new Trip("trip 1", null, null, "user 1", null);
+    Trip trip2 = new Trip("trip 2", null, null, "user 2", null);
     List<Trip> saved = repo.saveAll(Arrays.asList(trip1, trip2));
     TRIP_ID = saved.get(0).getId();
   }
@@ -47,20 +47,20 @@ public class TripMongoRepoIntegrationTest {
   @DisplayName("Should save trip")
   void shouldSaveTrip() {
     Trip newTrip = new Trip();
-    newTrip.setDestTitle("new trip");
+    newTrip.setTitle("new trip");
     String savedId = repo.save(newTrip).getId();
     Optional<Trip> saved = repo.findById(savedId);
     Assertions.assertThat(saved).isPresent();
-    Assertions.assertThat(saved.get().getDestTitle()).isEqualTo(newTrip.getDestTitle());
+    Assertions.assertThat(saved.get().getTitle()).isEqualTo(newTrip.getTitle());
   }
 
   @Test
   @DisplayName("Should update trip")
   void shouldUpdateTrip() {
       Trip trip = repo.findById(TRIP_ID).get();
-      trip.setDestTitle("updated");
+      trip.setTitle("updated");
       repo.save(trip);
-      Assertions.assertThat(repo.findById(TRIP_ID).get().getDestTitle()).isEqualTo("updated");
+      Assertions.assertThat(repo.findById(TRIP_ID).get().getTitle()).isEqualTo("updated");
   }
 
   @Test

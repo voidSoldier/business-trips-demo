@@ -1,6 +1,9 @@
 package com.cmpn.tripsdemo.domain;
 
 import com.cmpn.tripsdemo.repos.TripMongoRepo;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -11,11 +14,11 @@ public class Consumer {
 
   private TripMongoRepo tripRepo;
 
-  private FeignClient client;
+  private CustomFeignClient client;
 
   private static final Logger log = LoggerFactory.getLogger(Consumer.class);
 
-  public Consumer(TripMongoRepo tripRepo, FeignClient client) {
+  public Consumer(TripMongoRepo tripRepo, CustomFeignClient client) {
     this.tripRepo = tripRepo;
     this.client = client;
   }
@@ -33,21 +36,38 @@ public class Consumer {
       case "delete":
         delete(trip);
         break;
-        default: // exception to be added
+      default: // exception to be added
         log.error("Method with [{}] type doesn't exist", type);
     }
   }
 
-  private void saveOrUpdate(Trip trip) {
-    tripRepo.save(enrich(trip));
+  public void saveOrUpdate(Trip trip) {
+    tripRepo.save(trip.getLocation() != null ? enrich(trip) : trip);
   }
 
-  private void delete(Trip trip) {
+  public void delete(Trip trip) {
     tripRepo.delete(trip);
   }
 
   private Trip enrich(Trip trip) {
-    // TODO: enriching
+    Location location = trip.getLocation();
+    String locationName = location.getName();
+    ObjectMapper m = new ObjectMapper();
+
+    try {
+      String json = client.getLocationCoordinates(locationName, "json", "1");
+      JsonNode root = m.readTree(json);
+      JsonNode lat = root.findValue("lat");
+      JsonNode lon = root.findValue("lon");
+
+      if (lat == null || lon == null)
+        throw new UnsupportedOperationException();
+
+      location.setLat(lat.textValue());
+      location.setLon(lon.textValue());
+    } catch (JsonProcessingException | UnsupportedOperationException e) {
+      log.error("Error getting coordinates for location[{}]", locationName);
+    }
 
     return trip;
   }

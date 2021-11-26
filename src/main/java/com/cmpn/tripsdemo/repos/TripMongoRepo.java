@@ -5,5 +5,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface TripMongoRepo extends MongoRepository<Trip, String> {
 
-  void deleteAllByDestTitle(String destTitle);
+  void deleteAllByTitle(String title);
 }
