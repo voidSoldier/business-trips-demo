@@ -1,6 +1,6 @@
 package com.cmpn.tripsdemo.config;
 
-import com.cmpn.tripsdemo.domain.Consumer;
+import com.cmpn.tripsdemo.datasource.TripConsumer;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.FanoutExchange;
@@ -16,11 +16,11 @@ public class RabbitConfig {
 
   public static final String FANOUT_EXCHANGE_NAME = "trips-fanout-ex";
 
-  public static final String QUEUE_NAME = "trips-queue";
+  public static final String TRIPS_QUEUE = "trips-queue";
 
   @Bean
   Queue queue() {
-    return new Queue(QUEUE_NAME, true);
+    return new Queue(TRIPS_QUEUE, true);
   }
 
   @Bean
@@ -34,8 +34,8 @@ public class RabbitConfig {
   }
 
   @Bean
-  MessageListenerAdapter listenerAdapter(Consumer consumer) {
-    return new MessageListenerAdapter(consumer, "receiveMessage");
+  MessageListenerAdapter listenerAdapter(TripConsumer tripConsumer) {
+    return new MessageListenerAdapter(tripConsumer, "receiveMessage");
   }
 
   @Bean

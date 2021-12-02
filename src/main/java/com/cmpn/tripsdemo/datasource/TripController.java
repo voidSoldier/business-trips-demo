@@ -1,6 +1,7 @@
 package com.cmpn.tripsdemo.datasource;
 
 import com.cmpn.tripsdemo.domain.Trip;
+import com.cmpn.tripsdemo.domain.TripService;
 import com.cmpn.tripsdemo.exception.TripNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

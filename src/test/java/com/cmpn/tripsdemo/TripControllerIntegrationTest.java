@@ -1,6 +1,6 @@
 package com.cmpn.tripsdemo;
 
-import com.cmpn.tripsdemo.datasource.TripService;
+import com.cmpn.tripsdemo.domain.TripService;
 import com.cmpn.tripsdemo.domain.Trip;
 import com.cmpn.tripsdemo.exception.TripNotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
