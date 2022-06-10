@@ -16,6 +16,12 @@ public class Location implements Serializable {
   public Location() {
   }
 
+  public Location(String name, String lat, String lon) {
+    this.name = name;
+    this.lat = lat;
+    this.lon = lon;
+  }
+
   public Location(String name) {
     this.name = name;
   }

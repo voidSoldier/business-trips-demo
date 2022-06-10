@@ -16,7 +16,7 @@ public class Trip implements Serializable {
   @Id
   private String id;
 
-  @Max(255) // TODO: rename to 'tripTitle'
+  @Max(255)
   private String title;
 
   private LocalDateTime departure;
